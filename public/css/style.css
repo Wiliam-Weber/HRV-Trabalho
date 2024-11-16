@@ -1,0 +1,242 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f9;
+    padding: 10px;
+}
+
+.container {
+    text-align: center;
+    max-width: 800px;
+    width: 100%;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.question {
+    font-size: 1.4rem;
+    margin: 20px 0;
+    line-height: 1.5;
+}
+
+.rating-scale {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 20px 0;
+    position: relative;
+}
+
+.label-left, .label-right {
+    font-size: 1rem;
+    font-weight: bold;
+    position: absolute;
+    top: -20px;
+}
+
+.label-left {
+    left: 0;
+}
+
+.label-right {
+    right: 0;
+}
+
+.buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.rating-button {
+    font-size: 1.5rem;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.rating-button:focus,
+.rating-button.selected {
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    outline: none;
+}
+
+.feedback {
+    width: 100%;
+    height: 80px;
+    margin: 20px 0;
+    padding: 10px;
+    font-size: 1.2rem;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    resize: vertical;
+}
+
+.submit-button {
+    font-size: 1.2rem;
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+    background-color: #45a049;
+}
+
+/* Escala de cores para os botões */
+.rating-button[data-value="0"] { background-color: #ff3b3b; color: white; }
+.rating-button[data-value="1"] { background-color: #ff5722; color: white; }
+.rating-button[data-value="2"] { background-color: #ff9800; color: white; }
+.rating-button[data-value="3"] { background-color: #ffc107; color: white; }
+.rating-button[data-value="4"] { background-color: #ffeb3b; color: black; }
+.rating-button[data-value="5"] { background-color: #cddc39; color: black; }
+.rating-button[data-value="6"] { background-color: #8bc34a; color: black; }
+.rating-button[data-value="7"] { background-color: #4caf50; color: white; }
+.rating-button[data-value="8"] { background-color: #009688; color: white; }
+.rating-button[data-value="9"] { background-color: #00796b; color: white; }
+.rating-button[data-value="10"] { background-color: #004d40; color: white; }
+
+/* Responsividade: Ajustes para dispositivos menores */
+@media (max-width: 1024px) {
+    .container {
+        width: 90%;
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 1.6rem;
+    }
+
+    .question {
+        font-size: 1.2rem;
+    }
+
+    .rating-button {
+        font-size: 1.4rem;
+        padding: 8px 16px;
+    }
+
+    .feedback {
+        font-size: 1.1rem;
+        height: 100px;
+    }
+
+    .submit-button {
+        font-size: 1.1rem;
+        padding: 12px 24px;
+    }
+}
+
+/* Responsividade para telas médias (tablets) */
+@media (max-width: 768px) {
+    .rating-scale {
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+    }
+
+    .label-left, .label-right {
+        position: relative;
+        top: 0;
+        margin: 10px 0;
+        font-size: 1.2rem;
+    }
+
+    .buttons {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .rating-button {
+        margin: 5px;
+        font-size: 1.3rem;
+    }
+
+    .feedback {
+        height: 120px;
+        font-size: 1.1rem;
+    }
+
+    .submit-button {
+        padding: 12px 24px;
+    }
+}
+
+/* Responsividade para telas pequenas (celulares em modo retrato) */
+@media (max-width: 480px) {
+    /* Ajustes no container para garantir que todos os elementos fiquem dentro do "resalto" branco */
+    .container {
+        padding: 15px; /* Diminui um pouco o padding para garantir que o conteúdo caiba */
+        width: 100%; /* Garantir que o container ocupe toda a largura da tela */
+        max-width: 100%; /* Remover qualquer limite de largura */
+    }
+
+    /* Ajuste no título para que ele fique dentro da área branca */
+    h1 {
+        font-size: 1.6rem; /* Reduz o tamanho do título */
+        margin-bottom: 15px; /* Aumenta a margem inferior para maior espaçamento */
+        padding: 0 10px; /* Adiciona padding lateral para evitar que o título encoste nas bordas */
+        text-align: center; /* Centraliza o título */
+    }
+
+    /* Ajuste na pergunta para que ela fique dentro do "resalto" branco */
+    .question {
+        font-size: 1.1rem;
+        margin: 10px 20px; /* Ajusta as margens para a pergunta */
+        padding: 0 10px; /* Adiciona um pouco de padding para evitar que a pergunta fique colada nas bordas */
+    }
+
+    /* Ajustes na escala de avaliação e nos botões */
+    .rating-scale {
+        flex-direction: row;
+    }
+
+    .buttons {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .rating-button {
+        font-size: 1.2rem;
+        padding: 8px 16px;
+    }
+
+    .feedback {
+        height: 120px;
+        font-size: 1rem;
+    }
+
+    .submit-button {
+        padding: 12px 25px;
+    }
+}
+
+
