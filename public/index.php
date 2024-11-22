@@ -1,33 +1,78 @@
 <?php
-// Iniciar a sessão (caso queira usar sessões mais tarde para outras funcionalidades)
-session_start();
+// Incluir o arquivo de conexão ao banco
+include(__DIR__ . '/../src/db.php');
+
+// Recupera o número da pergunta a partir do parâmetro GET ou define como 1 se não existir
+$pergunta_atual = isset($_GET['pergunta_atual']) ? (int)$_GET['pergunta_atual'] : 1;
 
 // Verifica se o formulário foi enviado
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Captura a resposta selecionada e o feedback textual
-    $resposta = $_POST['resposta']; // Resposta do usuário (0-10)
-    $feedback = $_POST['feedback']; // Feedback textual (opcional)
+    // Captura a resposta e o feedback enviados pelo formulário
+    $resposta = isset($_POST['resposta']) ? (int)$_POST['resposta'] : null;
+    $feedback = isset($_POST['feedback']) ? $_POST['feedback'] : null;
 
-    // Se você estiver usando um banco de dados, essa parte seria responsável por inserir os dados no banco
-    // Aqui você pode incluir o arquivo de conexão e o código para inserir a avaliação no banco de dados
-    include('.../src/db.php'); // Supondo que o arquivo db.php contenha a conexão com o banco
+    try {
+        // Verifica se a pergunta atual existe e está ativa
+        $sql = "SELECT id FROM perguntas WHERE id = :id_pergunta AND status = 'ativa'";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue(':id_pergunta', $pergunta_atual, PDO::PARAM_INT);
+        $stmt->execute();
+        $pergunta = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Exemplo de inserção no banco de dados (substitua os valores reais de acordo com seu banco de dados)
-    $sql = "INSERT INTO avaliacoes (id_setor, id_pergunta, id_dispositivo, resposta, feedback_textual, data_hora_avaliacao) 
-            VALUES (1, 1, 1, ?, ?, NOW())"; // Valores exemplo para setor, pergunta, dispositivo
+        if (!$pergunta) {
+            // Caso a pergunta não exista ou não esteja ativa
+            echo "Erro: Pergunta não encontrada ou inativa!";
+            exit();
+        }
 
-    // Preparar a consulta
-    if ($stmt = $conn->prepare($sql)) {
-        // Associar os parâmetros
-        $stmt->bind_param("is", $resposta, $feedback); // O tipo do parâmetro pode ser alterado conforme o banco de dados
-        $stmt->execute(); // Executar a consulta
-        $stmt->close(); // Fechar a declaração
+        // Inserir a resposta e o feedback no banco de dados
+        $sql = "INSERT INTO avaliacoes (id_setor, id_pergunta, id_dispositivo, resposta, feedback_textual, data_hora_avaliacao) 
+                VALUES (:id_setor, :id_pergunta, :id_dispositivo, :resposta, :feedback_textual, NOW())";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue(':id_setor', 1, PDO::PARAM_INT); // Substitua conforme necessário
+        $stmt->bindValue(':id_pergunta', $pergunta_atual, PDO::PARAM_INT); // Pergunta atual
+        $stmt->bindValue(':id_dispositivo', 1, PDO::PARAM_INT); // Substitua conforme necessário
+        $stmt->bindValue(':resposta', $resposta, PDO::PARAM_INT);
+        $stmt->bindValue(':feedback_textual', $feedback, PDO::PARAM_STR);
+        $stmt->execute();
+
+        // Incrementa a pergunta para a próxima
+        $pergunta_atual++;
+
+        // Verifica o total de perguntas no banco de dados
+        $sql = "SELECT COUNT(*) FROM perguntas WHERE status = 'ativa'";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $total_perguntas = $stmt->fetchColumn();
+
+        // Se todas as perguntas foram respondidas, redireciona para a página de agradecimento
+        if ($pergunta_atual > $total_perguntas) {
+            header("Location: obrigado.php");
+            exit();
+        }
+
+        // Redireciona para a próxima pergunta
+        header("Location: index.php?pergunta_atual=" . $pergunta_atual);
+        exit();
+    } catch (PDOException $e) {
+        // Exibir erro em caso de falha
+        echo "Erro ao salvar a avaliação: " . $e->getMessage();
+        exit();
     }
-
-    // Redirecionar para a página de agradecimento
-    header("Location: obrigado.php");
-    exit(); // Garantir que o script pare após o redirecionamento
 }
+
+// Buscar a pergunta atual do banco de dados
+$sql = "SELECT id, texto_pergunta FROM perguntas WHERE id = :id_pergunta AND status = 'ativa'";
+$stmt = $conn->prepare($sql);
+$stmt->bindValue(':id_pergunta', $pergunta_atual, PDO::PARAM_INT);
+$stmt->execute();
+$pergunta = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Verifica o total de perguntas no banco de dados
+$sql = "SELECT COUNT(*) FROM perguntas WHERE status = 'ativa'";
+$stmt = $conn->prepare($sql);
+$stmt->execute();
+$total_perguntas = $stmt->fetchColumn();
 ?>
 
 <!DOCTYPE html>
@@ -41,24 +86,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <div class="container">
         <h1>Sistema de Avaliação Hospitalar</h1>
-        <p class="question">Com base na sua experiência em nossa instituição, em uma escala de 0 a 10, o quão provável 
-            você recomendaria nossos serviços a um amigo e/ou familiar?</p>
-        
-        <form action="index.php" method="POST"> <!-- O formulário agora envia os dados para o próprio index.php -->
+
+        <!-- Exibe a pergunta dinamicamente -->
+        <?php if ($pergunta): ?>
+            <p class="question"><?= $pergunta['texto_pergunta'] ?></p>
+        <?php else: ?>
+            <p>Não há perguntas ativas no momento.</p>
+        <?php endif; ?>
+
+        <form action="index.php?pergunta_atual=<?= $pergunta_atual ?>" method="POST">
             <div class="rating-scale">
                 <div class="label-left">Improvável</div>
                 <div class="buttons">
-                    <button type="button" class="rating-button" data-value="0">0</button>
-                    <button type="button" class="rating-button" data-value="1">1</button>
-                    <button type="button" class="rating-button" data-value="2">2</button>
-                    <button type="button" class="rating-button" data-value="3">3</button>
-                    <button type="button" class="rating-button" data-value="4">4</button>
-                    <button type="button" class="rating-button" data-value="5">5</button>
-                    <button type="button" class="rating-button" data-value="6">6</button>
-                    <button type="button" class="rating-button" data-value="7">7</button>
-                    <button type="button" class="rating-button" data-value="8">8</button>
-                    <button type="button" class="rating-button" data-value="9">9</button>
-                    <button type="button" class="rating-button" data-value="10">10</button>
+                    <?php for ($i = 0; $i <= 10; $i++): ?>
+                        <button type="button" class="rating-button" data-value="<?= $i ?>"><?= $i ?></button>
+                    <?php endfor; ?>
                 </div>
                 <div class="label-right">Muito Provável</div>
             </div>
@@ -66,11 +108,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="hidden" name="resposta" id="resposta" value="0"> <!-- Campo oculto para enviar a resposta -->
             
             <textarea name="feedback" class="feedback" placeholder="Escreva aqui seus comentários"></textarea>
-            <button type="submit" class="submit-button">Enviar Avaliação</button>
+
+            <!-- Condicional para exibir o botão certo -->
+            <?php if ($pergunta_atual < $total_perguntas): ?>
+                <button type="submit" class="submit-button">Próxima Pergunta</button>
+            <?php else: ?>
+                <button type="submit" class="submit-button">Enviar Avaliação</button>
+            <?php endif; ?>
         </form>
     </div>
 
-    <script src="js/script.js"></script> <!-- Linkando o arquivo JavaScript externo -->
+    <script src="js/script.js"></script>
 </body>
 </html>
-

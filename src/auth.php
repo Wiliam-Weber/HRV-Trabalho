@@ -1,7 +1,7 @@
 <?php
 // auth.php - Sistema de autenticação para painel administrativo
 
-include '.../src/db.php';
+include ('HRV_Trabalho/src/db.php');
 
 function login($usuario, $senha) {
     global $pdo;

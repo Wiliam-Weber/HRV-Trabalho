@@ -1,7 +1,7 @@
 <?php
 // perguntas.php - Funções de gerenciamento de perguntas
 
-include 'src/db.php';
+include ('HRV_Trabalho/src/db.php');
 
 function getPerguntas() {
     global $pdo;

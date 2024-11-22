@@ -1,6 +1,6 @@
 <?php
 // Exibir todas as respostas no painel administrativo
-include('.../src/db.php'); // Conectar ao banco de dados
+include('HRV_Trabalho/src/db.php'); // Conectar ao banco de dados
 
 $sql = "SELECT * FROM avaliacoes";
 $result = $conn->query($sql);
