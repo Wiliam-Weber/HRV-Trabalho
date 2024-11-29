@@ -7,22 +7,18 @@ if (!isset($_SESSION['logado']) || $_SESSION['logado'] !== true) {
     exit();
 }
 
-// Aqui vai o código do painel administrativo
 include(__DIR__ . '/../../src/db.php');
 
-// Exemplo de como você pode buscar perguntas e respostas no banco
 $query_perguntas = "SELECT id, texto_pergunta, status FROM perguntas WHERE status = 'ativa'";
 $stmt_perguntas = $conn->prepare($query_perguntas);
 $stmt_perguntas->execute();
 $perguntas = $stmt_perguntas->fetchAll(PDO::FETCH_ASSOC);
 
-// Exibir perguntas e respostas
 $respostas_query = "SELECT id_pergunta, resposta, COUNT(*) as total_respostas, feedback_textual FROM avaliacoes GROUP BY id_pergunta, resposta, feedback_textual";
 $stmt_respostas = $conn->prepare($respostas_query);
 $stmt_respostas->execute();
 $respostas = $stmt_respostas->fetchAll(PDO::FETCH_ASSOC);
 
-// Organizar as respostas por pergunta
 $respostas_por_pergunta = [];
 foreach ($respostas as $resposta) {
     $respostas_por_pergunta[$resposta['id_pergunta']]['respostas'][$resposta['resposta']] = $resposta['total_respostas'];
@@ -43,14 +39,12 @@ foreach ($respostas as $resposta) {
 <body>
     <h1>Painel Administrativo</h1>
 
-    <!-- Formulário para adicionar pergunta -->
     <h2>Adicionar Pergunta</h2>
     <form action="adicionar_pergunta.php" method="POST">
         <input type="text" name="texto_pergunta" placeholder="Texto da Pergunta" required>
         <button type="submit">Adicionar Pergunta</button>
     </form>
 
-    <!-- Tabela para gerenciar perguntas -->
     <h2>Gerenciar Perguntas</h2>
     <table>
         <thead>
@@ -76,7 +70,6 @@ foreach ($respostas as $resposta) {
         </tbody>
     </table>
 
-    <!-- Exibir Respostas -->
     <h2>Respostas</h2>
     <table>
         <thead>

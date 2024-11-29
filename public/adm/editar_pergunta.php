@@ -47,7 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 <body>
     <h1>Editar Pergunta</h1>
 
-    <!-- Formulário para editar pergunta -->
     <form action="editar_pergunta.php" method="POST">
         <input type="hidden" name="id_pergunta" value="<?php echo $pergunta['id']; ?>">
         <label for="texto_pergunta">Texto da Pergunta</label>

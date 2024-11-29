@@ -6,3 +6,6 @@ define('DB_NAME', 'HRV_Trabalho');
 define('DB_USER', 'postgres');
 define('DB_PASS', 'postgres');
 ?>
+
+
+

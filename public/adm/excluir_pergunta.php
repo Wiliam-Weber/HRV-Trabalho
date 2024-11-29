@@ -1,5 +1,4 @@
 <?php
-// Conectar ao banco de dados
 include(__DIR__ . '/../../src/db.php');
 
 if (isset($_GET['id'])) {

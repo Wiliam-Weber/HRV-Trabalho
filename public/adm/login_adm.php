@@ -25,11 +25,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt->execute();
             $usuario_banco = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if ($usuario_banco && password_verify($senha, $usuario_banco['senha'])) {
+            // Verifica usuário e senha diretamente
+            if ($usuario_banco && $senha === $usuario_banco['senha']) {
                 // Login bem-sucedido
                 $_SESSION['logado'] = true;
                 $_SESSION['usuario_adm'] = $usuario_banco['login']; 
-                header("Location: painel_adm.php");  
+                header("Location: painel_adm.php");
                 exit();
             } else {
                 // Senha ou usuário incorretos
@@ -43,7 +44,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="pt-br">
