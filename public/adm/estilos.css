@@ -1,0 +1,182 @@
+/* Reseta as margens e o padding de todos os elementos */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Corpo da página */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f6f9;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Cabeçalho do painel */
+header {
+    background-color: #004085;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Estilo para os links do cabeçalho */
+header a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 15px;
+    font-weight: bold;
+}
+
+header a:hover {
+    color: #f4f6f9;
+    text-decoration: underline;
+}
+
+/* Estilo principal do painel */
+.main-container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo da tabela */
+table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+table th, table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background-color: #004085;
+    color: #fff;
+}
+
+table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Botões de ação (adicionar, editar, excluir) */
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Estilo do formulário de adição de pergunta */
+form {
+    max-width: 600px;
+    margin: 40px auto;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+form label {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    display: block;
+}
+
+form input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+form button {
+    background-color: #28a745;
+    padding: 10px 20px;
+    margin-top: 20px;
+}
+
+form button:hover {
+    background-color: #218838;
+}
+
+/* Links de navegação */
+a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+/* Mensagens de erro ou sucesso */
+.alert {
+    padding: 15px;
+    background-color: #f44336;
+    color: white;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+
+.alert.success {
+    background-color: #4CAF50;
+}
+
+.alert.info {
+    background-color: #2196F3;
+}
+
+/* Estilo para os títulos */
+h1, h2, h3 {
+    text-align: center; /* Centralizando os títulos */
+    color: #004085; /* Cor do título */
+    font-weight: bold; /* Negrito */
+    margin-bottom: 20px; /* Espaço abaixo do título */
+}
+
+/* Adicionando um toque a mais nos títulos */
+h1 {
+    font-size: 2.5rem;
+    text-transform: uppercase; /* Deixa o título em letras maiúsculas */
+    letter-spacing: 2px; /* Espaçamento entre as letras */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* Sombra leve */
+}
+
+h2 {
+    font-size: 2rem;
+    text-transform: capitalize; /* Primeira letra maiúscula */
+    letter-spacing: 1.5px;
+    color: #0056b3; /* Tom mais suave de azul */
+}
+
+h3 {
+    font-size: 1.5rem;
+    text-transform: capitalize;
+    color: #333;
+}
+
+/* Títulos do cabeçalho (header) */
+header h1 {
+    font-size: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}

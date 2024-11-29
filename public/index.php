@@ -2,7 +2,7 @@
 // Incluir o arquivo de conexão ao banco
 include(__DIR__ . '/../src/db.php');
 
-// Recupera o número da pergunta a partir do parâmetro GET ou define como 1 se não existir
+// Recupera o número da pergunta atual a partir do parâmetro GET ou define como 1 se não existir
 $pergunta_atual = isset($_GET['pergunta_atual']) ? (int)$_GET['pergunta_atual'] : 1;
 
 // Verifica se o formulário foi enviado
@@ -20,9 +20,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $pergunta = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!$pergunta) {
-            // Caso a pergunta não exista ou não esteja ativa
-            echo "Erro: Pergunta não encontrada ou inativa!";
-            exit();
+            // Caso a pergunta não exista ou não esteja ativa, buscar a próxima pergunta ativa
+            $sql = "SELECT id FROM perguntas WHERE status = 'ativa' AND id > :id_pergunta ORDER BY id LIMIT 1";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindValue(':id_pergunta', $pergunta_atual, PDO::PARAM_INT);
+            $stmt->execute();
+            $proxima_pergunta = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($proxima_pergunta) {
+                // Atualiza o número da pergunta na URL
+                $pergunta_atual = $proxima_pergunta['id'];
+            } else {
+                // Se não houver mais perguntas ativas, redireciona para a página de agradecimento
+                header("Location: obrigado.php");
+                exit();
+            }
         }
 
         // Inserir a resposta e o feedback no banco de dados
@@ -36,24 +48,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bindValue(':feedback_textual', $feedback, PDO::PARAM_STR);
         $stmt->execute();
 
-        // Incrementa a pergunta para a próxima
-        $pergunta_atual++;
-
-        // Verifica o total de perguntas no banco de dados
-        $sql = "SELECT COUNT(*) FROM perguntas WHERE status = 'ativa'";
+        // Após salvar a resposta, busca a próxima pergunta
+        $sql = "SELECT id, texto_pergunta FROM perguntas WHERE status = 'ativa' AND id > :id_pergunta ORDER BY id LIMIT 1";
         $stmt = $conn->prepare($sql);
+        $stmt->bindValue(':id_pergunta', $pergunta_atual, PDO::PARAM_INT);
         $stmt->execute();
-        $total_perguntas = $stmt->fetchColumn();
+        $proxima_pergunta = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Se todas as perguntas foram respondidas, redireciona para a página de agradecimento
-        if ($pergunta_atual > $total_perguntas) {
+        // Se houver uma próxima pergunta, mantém o valor na URL
+        if ($proxima_pergunta) {
+            $pergunta_atual = $proxima_pergunta['id'];
+        } else {
+            // Se não houver mais perguntas ativas, redireciona para a página de agradecimento
             header("Location: obrigado.php");
             exit();
         }
-
-        // Redireciona para a próxima pergunta
-        header("Location: index.php?pergunta_atual=" . $pergunta_atual);
-        exit();
     } catch (PDOException $e) {
         // Exibir erro em caso de falha
         echo "Erro ao salvar a avaliação: " . $e->getMessage();
@@ -62,17 +71,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 // Buscar a pergunta atual do banco de dados
-$sql = "SELECT id, texto_pergunta FROM perguntas WHERE id = :id_pergunta AND status = 'ativa'";
+$sql = "SELECT id, texto_pergunta FROM perguntas WHERE id = :id_pergunta AND status = 'ativa' LIMIT 1"; // Limita a uma pergunta ativa
 $stmt = $conn->prepare($sql);
 $stmt->bindValue(':id_pergunta', $pergunta_atual, PDO::PARAM_INT);
 $stmt->execute();
 $pergunta = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Verifica o total de perguntas no banco de dados
-$sql = "SELECT COUNT(*) FROM perguntas WHERE status = 'ativa'";
-$stmt = $conn->prepare($sql);
-$stmt->execute();
-$total_perguntas = $stmt->fetchColumn();
+// Se não houver perguntas ativas, exibe uma mensagem
+if (!$pergunta) {
+    // Buscar a próxima pergunta ativa
+    $sql = "SELECT id, texto_pergunta FROM perguntas WHERE status = 'ativa' ORDER BY id ASC LIMIT 1";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+    $pergunta = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($pergunta) {
+        $pergunta_atual = $pergunta['id'];
+    } else {
+        // Se não houver perguntas ativas, redireciona para a página de agradecimento
+        header("Location: obrigado.php");
+        exit();
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -89,9 +109,9 @@ $total_perguntas = $stmt->fetchColumn();
 
         <!-- Exibe a pergunta dinamicamente -->
         <?php if ($pergunta): ?>
-            <p class="question"><?= $pergunta['texto_pergunta'] ?></p>
+            <p class="question"><?= htmlspecialchars($pergunta['texto_pergunta']) ?></p>
         <?php else: ?>
-            <p>Não há perguntas ativas no momento.</p>
+            <p class="question">Nenhuma pergunta ativa no momento.</p>
         <?php endif; ?>
 
         <form action="index.php?pergunta_atual=<?= $pergunta_atual ?>" method="POST">
@@ -109,12 +129,9 @@ $total_perguntas = $stmt->fetchColumn();
             
             <textarea name="feedback" class="feedback" placeholder="Escreva aqui seus comentários"></textarea>
 
-            <!-- Condicional para exibir o botão certo -->
-            <?php if ($pergunta_atual < $total_perguntas): ?>
-                <button type="submit" class="submit-button">Próxima Pergunta</button>
-            <?php else: ?>
-                <button type="submit" class="submit-button">Enviar Avaliação</button>
-            <?php endif; ?>
+            <button type="submit" class="submit-button">
+                <?= $pergunta ? 'Próxima Pergunta' : 'Enviar Avaliação' ?>
+            </button>
         </form>
     </div>
 

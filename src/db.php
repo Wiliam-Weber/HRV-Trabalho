@@ -1,9 +1,9 @@
 <?php
 $host = 'localhost';
 $port = '5432';
-$dbname = 'HRV_Trabalho'; // Nome do banco de dados
-$user = 'postgres';    // Usuário do PostgreSQL
-$password = 'postgres';  // Senha do PostgreSQL
+$dbname = 'HRV_Trabalho'; 
+$user = 'postgres';    
+$password = 'postgres';  
 
 try {
     $conn = new PDO("pgsql:host=$host;dbname=$dbname", $user, $password);
