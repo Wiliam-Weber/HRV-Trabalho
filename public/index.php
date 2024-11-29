@@ -41,9 +41,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $sql = "INSERT INTO avaliacoes (id_setor, id_pergunta, id_dispositivo, resposta, feedback_textual, data_hora_avaliacao) 
                 VALUES (:id_setor, :id_pergunta, :id_dispositivo, :resposta, :feedback_textual, NOW())";
         $stmt = $conn->prepare($sql);
-        $stmt->bindValue(':id_setor', 1, PDO::PARAM_INT); // Substitua conforme necessário
-        $stmt->bindValue(':id_pergunta', $pergunta_atual, PDO::PARAM_INT); // Pergunta atual
-        $stmt->bindValue(':id_dispositivo', 1, PDO::PARAM_INT); // Substitua conforme necessário
+        $stmt->bindValue(':id_setor', 1, PDO::PARAM_INT); 
+        $stmt->bindValue(':id_pergunta', $pergunta_atual, PDO::PARAM_INT); 
+        $stmt->bindValue(':id_dispositivo', 1, PDO::PARAM_INT); 
         $stmt->bindValue(':resposta', $resposta, PDO::PARAM_INT);
         $stmt->bindValue(':feedback_textual', $feedback, PDO::PARAM_STR);
         $stmt->execute();

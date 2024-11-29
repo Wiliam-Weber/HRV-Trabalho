@@ -3,10 +3,10 @@
 include(__DIR__ . '/../../src/db.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Pegar o texto da pergunta
+
     $texto_pergunta = $_POST['texto_pergunta'];
 
-    // Inserir a nova pergunta no banco de dados
+
     $query = "INSERT INTO perguntas (texto_pergunta, status) VALUES (:texto_pergunta, 'ativa')";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':texto_pergunta', $texto_pergunta);
