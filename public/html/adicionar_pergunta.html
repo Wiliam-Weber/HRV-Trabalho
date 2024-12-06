@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/estilos.css">
+    <title>Adicionar Pergunta</title>
+</head>
+<body>
+    <h1>Adicionar Pergunta</h1>
+
+    <!-- Mensagem de status -->
+    <?php if (isset($_GET['status']) && $_GET['status'] == 'sucesso'): ?>
+        <p style="color: green;">Pergunta adicionada com sucesso!</p>
+    <?php elseif (isset($_GET['status']) && $_GET['status'] == 'erro'): ?>
+        <p style="color: red;">Erro ao adicionar a pergunta!</p>
+    <?php endif; ?>
+
+    <!-- Formulário para adicionar pergunta -->
+    <form action="../adm/adicionar_pergunta.php" method="POST">
+        <label for="texto_pergunta">Texto da Pergunta</label>
+        <input type="text" id="texto_pergunta" name="texto_pergunta" required>
+        <button type="submit">Adicionar Pergunta</button>
+    </form>
+
+    <a href="painel_adm.html">Voltar ao Painel Administrativo</a>
+</body>
+</html>

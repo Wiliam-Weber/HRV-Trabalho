@@ -125,7 +125,7 @@ if (!$pergunta) {
                 <div class="label-right">Muito Provável</div>
             </div>
             
-            <input type="hidden" name="resposta" id="resposta" value="0"> <!-- Campo oculto para enviar a resposta -->
+            <input type="hidden" name="resposta" id="resposta" value="0"> 
             
             <textarea name="feedback" class="feedback" placeholder="Escreva aqui seus comentários"></textarea>
 

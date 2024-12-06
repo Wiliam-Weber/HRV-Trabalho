@@ -192,24 +192,24 @@ h1 {
 @media (max-width: 480px) {
     /* Ajustes no container para garantir que todos os elementos fiquem dentro do "resalto" branco */
     .container {
-        padding: 15px; /* Diminui um pouco o padding para garantir que o conteúdo caiba */
-        width: 100%; /* Garantir que o container ocupe toda a largura da tela */
-        max-width: 100%; /* Remover qualquer limite de largura */
+        padding: 15px; 
+        width: 100%; 
+        max-width: 100%; 
     }
 
-    /* Ajuste no título para que ele fique dentro da área branca */
+    
     h1 {
-        font-size: 1.6rem; /* Reduz o tamanho do título */
-        margin-bottom: 15px; /* Aumenta a margem inferior para maior espaçamento */
-        padding: 0 10px; /* Adiciona padding lateral para evitar que o título encoste nas bordas */
-        text-align: center; /* Centraliza o título */
+        font-size: 1.6rem; 
+        margin-bottom: 15px; 
+        padding: 0 10px; 
+        text-align: center; 
     }
 
     /* Ajuste na pergunta para que ela fique dentro do "resalto" branco */
     .question {
         font-size: 1.1rem;
-        margin: 10px 20px; /* Ajusta as margens para a pergunta */
-        padding: 0 10px; /* Adiciona um pouco de padding para evitar que a pergunta fique colada nas bordas */
+        margin: 10px 20px; 
+        padding: 0 10px; 
     }
 
     /* Ajustes na escala de avaliação e nos botões */

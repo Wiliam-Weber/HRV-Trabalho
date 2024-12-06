@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/estilos.css">
+    <title>Editar Pergunta</title>
+</head>
+<body>
+    <h1>Editar Pergunta</h1>
+
+    <form action="../adm/editar_pergunta.php" method="POST">
+        <input type="hidden" name="id_pergunta" value="<?php echo $pergunta['id']; ?>">
+        <label for="texto_pergunta">Texto da Pergunta</label>
+        <input type="text" name="texto_pergunta" value="<?php echo $pergunta['texto_pergunta']; ?>" required>
+        <button type="submit">Salvar Alterações</button>
+    </form>
+
+    <a href="painel_adm.html">Voltar ao Painel Administrativo</a>
+</body>
+</html>
